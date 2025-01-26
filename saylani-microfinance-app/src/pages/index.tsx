@@ -52,7 +52,6 @@ export default function Home() {
         selectedCategory.maxLoan !== "Based on Requirement"
           ? selectedCategory.maxLoan
           : 0;
-      const remainingLoan = Math.max(0, maxLoan - Number(deposit));
 
       setCalculatedLoan({
         loanAmount: remainingLoan,
