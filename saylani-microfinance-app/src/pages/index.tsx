@@ -34,11 +34,17 @@ export default function Home() {
     },
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
-  const [deposit, setDeposit] = useState("");
-  const [loanPeriod, setLoanPeriod] = useState("");
-  const [calculatedLoan, setCalculatedLoan] = useState(null);
+  // Corrected state declarations with proper TypeScript types
+  const [selectedCategory, setSelectedCategory] = useState<
+    (typeof loanCategories)[number] | null
+  >(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [deposit, setDeposit] = useState<number | "">("");
+  const [loanPeriod, setLoanPeriod] = useState<number | "">("");
+  const [calculatedLoan, setCalculatedLoan] = useState<{
+    loanAmount: number;
+    monthlyPayment: string;
+  } | null>(null);
 
   const handleCalculate = () => {
     if (selectedCategory && deposit && loanPeriod) {
@@ -46,11 +52,11 @@ export default function Home() {
         selectedCategory.maxLoan !== "Based on Requirement"
           ? selectedCategory.maxLoan
           : 0;
-      const remainingLoan = Math.max(0, maxLoan - deposit);
+      const remainingLoan = Math.max(0, maxLoan - Number(deposit));
 
       setCalculatedLoan({
         loanAmount: remainingLoan,
-        monthlyPayment: (remainingLoan / (loanPeriod * 12)).toFixed(2),
+        monthlyPayment: (remainingLoan / (Number(loanPeriod) * 12)).toFixed(2),
       });
     } else {
       alert("Please fill all fields!");
@@ -93,7 +99,6 @@ export default function Home() {
         </div>
       </header>
 
-      
       <main className="px-6 py-12">
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
@@ -144,7 +149,8 @@ export default function Home() {
                 className="w-full border border-gray-300 rounded-lg p-2 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-300"
                 onChange={(e) =>
                   setSelectedCategory(
-                    loanCategories.find((cat) => cat.name === e.target.value)
+                    loanCategories.find((cat) => cat.name === e.target.value) ||
+                      null
                   )
                 }
               >
